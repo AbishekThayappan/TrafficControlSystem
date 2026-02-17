@@ -2,7 +2,9 @@ package com.maverick.TrafficSignal.core.model;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TrafficLightStateTest {
 
@@ -40,5 +42,33 @@ public class TrafficLightStateTest {
         assertEquals("red", TrafficLightState.RED.getDisplayName());
         assertEquals("green", TrafficLightState.GREEN.getDisplayName());
         assertEquals("yellow", TrafficLightState.YELLOW.getDisplayName());
+    }
+
+    @Test
+    public void shouldIdentifyGreenState() {
+        assertTrue(TrafficLightState.GREEN.isGreen());
+        assertFalse(TrafficLightState.RED.isGreen());
+        assertFalse(TrafficLightState.YELLOW.isGreen());
+    }
+
+    @Test
+    public void shouldIdentifyRedState() {
+        assertTrue(TrafficLightState.RED.isRed());
+        assertFalse(TrafficLightState.GREEN.isRed());
+        assertFalse(TrafficLightState.YELLOW.isRed());
+    }
+
+    @Test
+    public void shouldIdentifyYellowState() {
+        assertTrue(TrafficLightState.YELLOW.isYellow());
+        assertFalse(TrafficLightState.RED.isYellow());
+        assertFalse(TrafficLightState.GREEN.isYellow());
+    }
+
+    @Test
+    public void shouldCreateStateFromString() {
+        assertEquals(TrafficLightState.RED, TrafficLightState.valueOf("RED"));
+        assertEquals(TrafficLightState.GREEN, TrafficLightState.valueOf("GREEN"));
+        assertEquals(TrafficLightState.YELLOW, TrafficLightState.valueOf("YELLOW"));
     }
 }
