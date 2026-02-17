@@ -84,4 +84,32 @@ public class TrafficLight {
             lock.writeLock().unlock();
         }
     }
+
+    public List<TrafficLightSnapshot> getHistory() {
+        lock.readLock().lock();
+        try {
+            return Collections.unmodifiableList(new ArrayList<>(history));
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    public long getDurationForState(TrafficLightState state) {
+        lock.readLock().lock();
+        try {
+            return stateDurations.getOrDefault(state, 0L);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    public void clearHistory() {
+        lock.writeLock().lock();
+        try {
+            history.clear();
+            recordSnapshot();
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
 }
