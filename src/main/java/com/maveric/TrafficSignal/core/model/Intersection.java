@@ -49,6 +49,7 @@ public class Intersection {
             }
             return true;
         } finally {
+            // always safe to keep unlock in final so after business logic it will close the lock.
             lock.writeLock().unlock();
         }
     }
