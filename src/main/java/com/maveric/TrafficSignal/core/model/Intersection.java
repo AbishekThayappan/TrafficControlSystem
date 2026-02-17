@@ -63,7 +63,7 @@ public class Intersection {
             // Only allow green transitions if they don't create conflicts
             if (newState.isGreen() && hasConflictingGreenLight(direction)) {
                 throw new IllegalStateException(
-                        String.format("Cannot set %s to GREEN: conflicting direction already green",
+                        String.format("Cannot set %s the "+direction+" to GREEN: conflicting direction already green",
                                 direction));
             }
             lights.get(direction).setState(newState);
