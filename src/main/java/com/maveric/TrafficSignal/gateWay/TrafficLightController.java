@@ -88,9 +88,6 @@ public class TrafficLightController {
         boolean success = intersection.advanceAllLights();
 
         if (!success) {
-//            throw new IllegalStateException(
-//                    String.format(" Since the light is first red and then immediately turns green," +
-//                            " conflicts only occur when multiple directions are green at the same time, which is rare."));
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(null);
 
