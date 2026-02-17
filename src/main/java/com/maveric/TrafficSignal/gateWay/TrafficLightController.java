@@ -81,4 +81,25 @@ public class TrafficLightController {
         }
     }
 
+    @PostMapping("/{id}/advance")
+    public ResponseEntity<IntersectionStateResponse> advanceLights(@PathVariable String id) {
+        Intersection intersection = intersectionManager.getOrCreateIntersection(id);
+        boolean success = intersection.advanceAllLights();
+
+        if (!success) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(null);
+        }
+
+        var snapshots = intersection.getAllLightSnapshots();
+        var lights = snapshots.entrySet().stream()
+                .collect(Collectors.toMap(
+                        e -> e.getKey().toString(),
+                        e -> TrafficLightResponse.from(e.getValue())));
+
+        IntersectionStateResponse response = new IntersectionStateResponse(id,
+                intersection.isPaused(), lights);
+        return ResponseEntity.ok(response);
+    }
+
 }
