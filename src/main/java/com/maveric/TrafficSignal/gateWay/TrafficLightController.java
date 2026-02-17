@@ -150,4 +150,13 @@ public class TrafficLightController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<Map<String, String>> listIntersections() {
+        var intersections = intersectionManager.getAllIntersections().stream()
+                .collect(Collectors.toMap(
+                        Intersection::getId,
+                        i -> i.isPaused() ? "paused" : "active"));
+        return ResponseEntity.ok(intersections);
+    }
+
 }
