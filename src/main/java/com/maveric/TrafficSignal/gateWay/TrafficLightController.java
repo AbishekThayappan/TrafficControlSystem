@@ -5,6 +5,7 @@ import com.maveric.TrafficSignal.core.model.Intersection;
 import com.maveric.TrafficSignal.core.model.TrafficLightState;
 import com.maveric.TrafficSignal.core.services.IntersectionManager;
 import com.maveric.TrafficSignal.gateWay.response.IntersectionStateResponse;
+import com.maveric.TrafficSignal.gateWay.response.TrafficLightHistoryResponse;
 import com.maveric.TrafficSignal.gateWay.response.TrafficLightResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -132,6 +133,21 @@ public class TrafficLightController {
         IntersectionStateResponse response = new IntersectionStateResponse(id,
                 intersection.isPaused(), lights);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/light/{direction}/history")
+    public ResponseEntity<?> getLightHistory(
+            @PathVariable String id,
+            @PathVariable String direction) {
+        try {
+            Intersection intersection = intersectionManager.getOrCreateIntersection(id);
+            Direction dir = Direction.valueOf(direction.toUpperCase());
+            var snapshots = intersection.getLightHistory(dir);
+            var response = TrafficLightHistoryResponse.from(direction, snapshots);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid direction: " + e.getMessage());
+        }
     }
 
 }
