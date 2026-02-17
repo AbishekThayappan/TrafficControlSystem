@@ -2,17 +2,16 @@ package com.maveric.TrafficSignal.gateWay;
 
 import com.maveric.TrafficSignal.core.model.Direction;
 import com.maveric.TrafficSignal.core.model.Intersection;
+import com.maveric.TrafficSignal.core.model.TrafficLightState;
 import com.maveric.TrafficSignal.core.services.IntersectionManager;
 import com.maveric.TrafficSignal.gateWay.response.IntersectionStateResponse;
 import com.maveric.TrafficSignal.gateWay.response.TrafficLightResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -56,5 +55,30 @@ public class TrafficLightController {
         }
     }
 
+    @PostMapping("/{id}/light/{direction}/set")
+    public ResponseEntity<?> setLightState(
+            @PathVariable String id,
+            @PathVariable String direction,
+            @RequestBody Map<String, String> request) {
+        try {
+            Intersection intersection = intersectionManager.getOrCreateIntersection(id);
+            Direction dir = Direction.valueOf(direction.toUpperCase());
+            String state = request.get("state");
+
+            if (state == null) {
+                return ResponseEntity.badRequest().body("Missing 'state' in request body");
+            }
+
+            TrafficLightState newState = TrafficLightState.valueOf(state.toUpperCase());
+            intersection.setLightState(dir, newState);
+
+            var snapshot = intersection.getLight(dir).getSnapshot();
+            return ResponseEntity.ok(TrafficLightResponse.from(snapshot));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid direction or state: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+    }
 
 }
