@@ -40,4 +40,31 @@ public class IntersectionManagerTest {
         assertNotEquals(first.getId(), second.getId());
         assertEquals(2, manager.getIntersectionCount());
     }
+    @Test
+    public void shouldReturnExistingIntersectionViaOptional() {
+        manager.getOrCreateIntersection("Maveric");
+        var intersection = manager.getIntersection("Maveric");
+
+        assertTrue(intersection.isPresent());
+        assertEquals("Maveric", intersection.get().getId());
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalForNonExistent() {
+        var intersection = manager.getIntersection("NonExistent");
+        assertTrue(intersection.isEmpty());
+    }
+
+    @Test
+    public void shouldListAllIntersections() {
+        manager.getOrCreateIntersection("Maveric");
+        manager.getOrCreateIntersection("Broadway & 42nd");
+        manager.getOrCreateIntersection("5th & Park");
+
+        var all = manager.getAllIntersections();
+        assertEquals(3, all.size());
+    }
+
+
+
 }

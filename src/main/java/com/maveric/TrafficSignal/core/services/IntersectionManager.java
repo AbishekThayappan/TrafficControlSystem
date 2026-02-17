@@ -3,10 +3,7 @@ package com.maveric.TrafficSignal.core.services;
 import com.maveric.TrafficSignal.core.model.Intersection;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -51,7 +48,14 @@ public class IntersectionManager {
         }
     }
 
-
+    public Collection<Intersection> getAllIntersections() {
+        lock.readLock().lock();
+        try {
+            return new ArrayList<>(intersections.values());
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
     public int getIntersectionCount() {
         lock.readLock().lock();
         try {
