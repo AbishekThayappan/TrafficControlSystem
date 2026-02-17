@@ -1,5 +1,6 @@
 package com.maveric.TrafficSignal.gateWay;
 
+import com.maveric.TrafficSignal.core.model.Direction;
 import com.maveric.TrafficSignal.core.model.Intersection;
 import com.maveric.TrafficSignal.core.services.IntersectionManager;
 import com.maveric.TrafficSignal.gateWay.response.IntersectionStateResponse;
@@ -40,5 +41,20 @@ public class TrafficLightController {
                 intersection.isPaused(), lights);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{id}/light/{direction}")
+    public ResponseEntity<TrafficLightResponse> getLightState(
+            @PathVariable String id,
+            @PathVariable String direction) {
+        try {
+            Intersection intersection = intersectionManager.getOrCreateIntersection(id);
+            Direction dir = Direction.valueOf(direction.toUpperCase());
+            var snapshot = intersection.getLight(dir).getSnapshot();
+            return ResponseEntity.ok(TrafficLightResponse.from(snapshot));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 
 }
