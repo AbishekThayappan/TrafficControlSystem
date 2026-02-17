@@ -64,4 +64,14 @@ public class IntersectionManager {
             lock.readLock().unlock();
         }
     }
+
+
+    public boolean deleteIntersection(String intersectionId) {
+        lock.writeLock().lock();
+        try {
+            return intersections.remove(intersectionId) != null;
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
 }

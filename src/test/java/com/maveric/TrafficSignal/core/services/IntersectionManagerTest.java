@@ -65,6 +65,4 @@ public class IntersectionManagerTest {
         assertEquals(3, all.size());
     }
 
-
-
 }

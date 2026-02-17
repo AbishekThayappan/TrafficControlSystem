@@ -159,4 +159,13 @@ public class TrafficLightController {
         return ResponseEntity.ok(intersections);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteIntersection(@PathVariable String id) {
+        boolean deleted = intersectionManager.deleteIntersection(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }
