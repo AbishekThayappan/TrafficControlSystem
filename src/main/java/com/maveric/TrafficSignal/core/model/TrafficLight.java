@@ -1,4 +1,4 @@
-package com.maverick.TrafficSignal.core.model;
+package com.maveric.TrafficSignal.core.model;
 
 import java.time.Instant;
 import java.util.*;

@@ -1,4 +1,4 @@
-package com.maverick.TrafficSignal;
+package com.maveric.TrafficSignal;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
