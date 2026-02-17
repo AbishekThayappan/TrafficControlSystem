@@ -151,12 +151,14 @@ public class Intersection {
     }
 
     private boolean isValidState(Map<Direction, TrafficLightState> states) {
-        for (Direction dir1 : Direction.values()) {
-            if (!states.get(dir1).isGreen()) {
-                continue;
-            }
-            for (Direction dir2 : Direction.values()) {
-                if (dir1 != dir2 && dir1.conflictsWith(dir2) && states.get(dir2).isGreen()) {
+        Set<Direction> greenDirs = states.entrySet().stream()
+                .filter(e -> e.getValue().isGreen())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
+
+        for (Direction dir1 : greenDirs) {
+            for (Direction dir2 : greenDirs) {
+                if (dir1 != dir2 && dir1.conflictsWith(dir2)) {
                     return false;
                 }
             }
