@@ -55,7 +55,7 @@ public class Intersection {
     }
 
     public void setLightState(Direction direction, TrafficLightState newState) {
-        Objects.requireNonNull(direction);
+        Objects.requireNonNull(direction);// Direction and newState always mandatory to set the state .
         Objects.requireNonNull(newState);
 
         lock.writeLock().lock();
