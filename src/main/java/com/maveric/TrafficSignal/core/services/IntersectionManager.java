@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -38,6 +39,25 @@ public class IntersectionManager {
             return intersections.computeIfAbsent(intersectionId, Intersection::new);
         } finally {
             lock.writeLock().unlock();
+        }
+    }
+
+    public Optional<Intersection> getIntersection(String intersectionId) {
+        lock.readLock().lock();
+        try {
+            return Optional.ofNullable(intersections.get(intersectionId));
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+
+    public int getIntersectionCount() {
+        lock.readLock().lock();
+        try {
+            return intersections.size();
+        } finally {
+            lock.readLock().unlock();
         }
     }
 }
