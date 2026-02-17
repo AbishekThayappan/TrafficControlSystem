@@ -102,4 +102,20 @@ public class TrafficLightController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/{id}/pause")
+    public ResponseEntity<IntersectionStateResponse> pauseIntersection(@PathVariable String id) {
+        Intersection intersection = intersectionManager.getOrCreateIntersection(id);
+        intersection.pause();
+
+        var snapshots = intersection.getAllLightSnapshots();
+        var lights = snapshots.entrySet().stream()
+                .collect(Collectors.toMap(
+                        e -> e.getKey().toString(),
+                        e -> TrafficLightResponse.from(e.getValue())));
+
+        IntersectionStateResponse response = new IntersectionStateResponse(id,
+                intersection.isPaused(), lights);
+        return ResponseEntity.ok(response);
+    }
+
 }
