@@ -38,10 +38,12 @@ public class Intersection {
                 proposedStates.put(dir, current.nextState());
             }
 
+
             if (!isValidState(proposedStates)) {
+                // In this state all
+                // if newly initiated then default all light state is red if moved next state by advance it will cause conflict.
                 return false;
             }
-
             for (Direction dir : Direction.values()) {
                 lights.get(dir).transitionToNextState();
             }
